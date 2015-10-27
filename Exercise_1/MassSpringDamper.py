@@ -56,11 +56,8 @@ T = np.arange(Tmin, Tmax + dt, dt)  # create time scale with 0..1 intervals
 T_small = np.arange(Tmin, Tmax + dt_small, dt_small)
 T_large = np.arange(Tmin, Tmax + dt_large, dt_large)
 y = np.zeros(len(T))
-y_small = np.zeros(len(T_small))
-y_large = np.zeros(len(T_large))
-
-# Exact solution
-y = np.exp(T)  # a plot with exact equation using very small intervals
+dy = np.zeros(len(T))
+d2y = np.zeros(len(T))
 
 # Approximated solution with small integration Step
 # dydx = e^x = y, differentiation rule of e^x
@@ -70,23 +67,20 @@ y = np.exp(T)  # a plot with exact equation using very small intervals
 # y = 1,
 # dy/dt = 0
 # m = 1, c = 0.1, k = 1
-y_small[0] = 1
-z_curr = 0
 m = 1
 c = 0.1
 k = 1
-for t in xrange(1, len(T_small)):
-    y_small[t] = y_small[t - 1] + z_curr * dt_small
-    z_curr = z_curr + (-1/m * (c * z_curr + k * y_small[t]))
+y[0] = 1
+dy[0] = 0
+d2y[0] = (-c/m)*dy[0] - (k/m)*y[0]
 
-# Approximated solution with large integration Step
-y_large[0] = np.exp(Tmin)  # Initial value
-for t in xrange(1, len(T_large)):
-    y_large[t] = y_large[t - 1] + dt_large * y_large[t - 1]
+for t in xrange(1, len(T_small)):
+    dy[t] = dy[t - 1] + d2y[t-1] * dt_small
+    d2y[t] = d2y[t-1] + (-1/m * (c * d2y[t-1] + k * dy[t]))
 
 # Plot the results
 # plt.plot(T, y, 'b', label='Exact solution of y = $e^t$')
-plt.plot(T_small, y_small, 'g', label='Euler method $\delta$ t = 0.1')
+plt.plot(T_small, dy, 'g', label='Euler method $\delta$ t = 0.1')
 # plt.plot(T_large, y_large, 'r', label='Euler method $\delta$ t = 0.5')
 plt.xlabel('t')
 plt.ylabel('y')
