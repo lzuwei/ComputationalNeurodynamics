@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """
 Computational Neurodynamics
 Exercise 1
@@ -24,10 +26,10 @@ T    = np.arange(Tmin, Tmax+dt, dt)
 I = 10
 
 ## Parameters of Izhikevich's model (regular spiking)
-a = 0.02
-b = 0.2
-c = -65
-d = 8
+# a = 0.02
+# b = 0.2
+# c = -65
+# d = 8
 
 ## Parameters of Izhikevich's model (fast spiking)
 # a = 0.02
@@ -40,6 +42,12 @@ d = 8
 # b = 0.2
 # c = -50
 # d = 2
+
+## Parameters of Izhikevich's model (inhibitory)
+a = 0.02
+b = 0.25
+c = -65
+d = 2
 
 v = np.zeros(len(T))
 u = np.zeros(len(T))
@@ -59,7 +67,16 @@ for t in xrange(len(T)-1):
     v[t]   = 30          # Add a Dirac pulse for visualisation
     v[t+1] = c           # Reset to resting potential
     u[t+1] = u[t+1] + d  # Update recovery variable
-    
+
+
+# dv/dt = 0.04v2 +5v+140−u+I dt
+# du/dt = a(bv − u)
+for t in xrange(len(T -1)):
+  # implement runge kuntta
+  k1 = v[t] + 0.04 * v[t]**2 * 5*v[t] + 140 - u[t] + I
+
+
+  v[t+1]
     
 ## Plot the membrane potential
 plt.subplot(211)
